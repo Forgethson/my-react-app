@@ -1,5 +1,7 @@
 // 项目根组件
-// App -> index.js -> public/index.html(root)
+// 渲染步骤：App -> index.js -> public/index.html(root)
+
+import { useState } from 'react';
 
 const message = 'this is message'
 
@@ -50,10 +52,24 @@ function MyButton() {
   return <button>click me</button>
 }
 
+function addOne(a) {
+  return a + 1;
+}
+
 
 function App() {
-  // 状态管理
-  const [count, setCount] = React.useState(0)
+  // 状态管理 value, setValue, 初始值
+  const [count, setCount] = useState(0)
+  const [name, setName] = useState('abc')
+
+  // 点击按钮时，调用handleClick()，在其中会调用setCount()，其参数是函数，例如输入是函数addOne()
+  function handleClick() {
+    setCount(addOne); // 自定义的函数
+  }
+
+  function handleClick2() {
+    setName(a => a + 'abc'); // 匿名函数
+  }
 
   return (
     // JSX(JavaScript + HTML)
@@ -116,7 +132,9 @@ function App() {
       <h1>组件状态管理-useState</h1>
       <div>
         <h2>组件基础使用</h2>
-        <button onClick={() => setCount(count + 1)}>{count}</button>
+        {/* <button onClick={() => setCount(a => a + 1)}>{count}</button> */}
+        <button onClick={handleClick}>{count}</button>
+        <button onClick={handleClick2}>{name}</button>
       </div>
 
 
