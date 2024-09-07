@@ -2,6 +2,7 @@
 // 渲染步骤：App -> index.js -> public/index.html(root)
 
 import { useState } from 'react';
+import './index.css'
 
 const message = 'this is message'
 
@@ -16,6 +17,11 @@ const loading = true
 
 function getAge() {
   return 18
+}
+
+const style = {
+  color: 'red',
+  fontSize: '25px'
 }
 
 // 在JSX中可以通过大括号语法{} 识别JavaScript中的表达式，比如常见的变量、函数调用、方法调用等等
@@ -60,15 +66,19 @@ function addOne(a) {
 function App() {
   // 状态管理 value, setValue, 初始值
   const [count, setCount] = useState(0)
-  const [name, setName] = useState('abc')
+  const [person, setPerson] = useState({ name: 'jack' })
 
   // 点击按钮时，调用handleClick()，在其中会调用setCount()，其参数是函数，例如输入是函数addOne()
   function handleClick() {
     setCount(addOne); // 自定义的函数
+    setCount(a => a + 1); // 匿名函数
   }
 
   function handleClick2() {
-    setName(a => a + 'abc'); // 匿名函数
+    setPerson(() => ({
+      ...person, // ...展开运算符：遍历原对象，把每一个属性放到新的对象中
+      name: "wjd"
+    })); // 匿名函数
   }
 
   return (
@@ -134,7 +144,18 @@ function App() {
         <h2>组件基础使用</h2>
         {/* <button onClick={() => setCount(a => a + 1)}>{count}</button> */}
         <button onClick={handleClick}>{count}</button>
-        <button onClick={handleClick2}>{name}</button>
+        <button onClick={handleClick2}>{person.name}</button>
+      </div>
+
+      <h1>组件的基础样式处理</h1>
+      <h2>行内样式</h2>
+      <div>
+        <span style={{ color: 'red', fontSize: '25px' }}>this is span(匿名类)</span>
+        <span style={style}>this is span(定义类对象)</span> 
+      </div>
+      <h2>class类名控制</h2>
+      <div>
+        <span className="foo">this is span</span>
       </div>
 
 
