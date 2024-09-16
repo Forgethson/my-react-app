@@ -1,7 +1,7 @@
 // 项目根组件
 // 渲染步骤：App -> index.js -> public/index.html(root)
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './index.css'
 
 const message = 'this is message'
@@ -58,6 +58,24 @@ function MyButton() {
   return <button>click me</button>
 }
 
+function MyArticle(props) {
+  return (
+    <div>
+      <h3>{props.title}</h3>
+      <p>{props.content}</p>
+    </div>
+  )
+}
+
+// // function MyArticle({title, content}) {
+//   return (
+//     <div>
+//       <h3>{title}</h3>
+//       <p>{content}</p>
+//     </div>
+//   )
+// }
+
 function addOne(a) {
   return a + 1;
 }
@@ -81,6 +99,21 @@ function App() {
     })); // 匿名函数
   }
 
+  function VideoPlayer({ src, isPlaying }) {
+    const ref = useRef();
+    useEffect(() => {
+      if (isPlaying) {
+        ref.current.play();
+      } else {
+        ref.current.pause();
+      }
+    });
+    return <video ref={ref} src={src} loop playsInline />;
+  }
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [value, setValue] = useState('');
+
   return (
     // JSX(JavaScript + HTML)
     <div className="App">
@@ -100,14 +133,29 @@ function App() {
         <h2>列表渲染</h2>
         {/* 注意，渲染对象需要加JSON.stringify，key是React内部的标识，也可以不加 */}
         <ul>
-          {list.map(item => <li key={item.id}>{JSON.stringify(item)}</li>)}
+          {list.map(item => {
+            return (
+              <li key={item.id}> {item.name} </li>
+            )
+          })}
         </ul>
+        <div>省略return和大括号的写法</div>
         <ul>
-          {list.map(item => <li key={item.id}>{item.name}</li>)}
+          {list.map(item => (
+            <li key={item.id}> {item.name} </li>
+          ))}
         </ul>
+        <div>如果写在一行，小括号也可以省略</div>
+        <ul>
+          {list.map(item => <li key={item.id}> {item.name} </li>
+          )}
+        </ul>
+        <ol>
+          {list.map(item => <li key={item.id}> {item.name} </li>)}
+        </ol>
 
         <h2>条件渲染</h2>
-        {flag && <span>this is span      --     </span>}
+        {1 === 2 || flag && <span>this is span      --     </span>}
         {loading ? <span>loading.....</span> : <span>not loading</span>}
 
         <h2>复杂条件渲染</h2>
@@ -147,17 +195,47 @@ function App() {
         <button onClick={handleClick2}>{person.name}</button>
       </div>
 
+      <div>
+        <h2>自定义组件对象输入</h2>
+        <MyArticle
+          title="标题"
+          content="内容"
+        />
+      </div>
+
+
       <h1>组件的基础样式处理</h1>
       <h2>行内样式</h2>
       <div>
         <span style={{ color: 'red', fontSize: '25px' }}>this is span(匿名类)</span>
-        <span style={style}>this is span(定义类对象)</span> 
+        <span style={style}>this is span(定义类对象)</span>
       </div>
       <h2>class类名控制</h2>
       <div>
         <span className="foo">this is span</span>
       </div>
 
+      <h1>useEffect测试</h1>
+      <div>
+        <button onClick={() => setIsPlaying(!isPlaying)}>
+          {isPlaying ? '暂停' : '播放'}
+        </button>
+      </div>
+      <div>
+        <VideoPlayer
+          isPlaying={isPlaying}
+          src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+        />
+      </div>
+
+      <h1>受控表单绑定</h1>
+      <div>
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        ></input>
+      </div>
 
     </div>
   );
